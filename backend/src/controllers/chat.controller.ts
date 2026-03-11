@@ -3,11 +3,15 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { chatService } from "../services/chat.service";
 import { MediaType } from "@prisma/client";
+<<<<<<< HEAD
 import { getIo, onlineUsers } from "../socket/io";
+=======
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
 import path from "path";
 
 function getMediaType(filename: string): MediaType {
   const ext = path.extname(filename).toLowerCase();
+<<<<<<< HEAD
   if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext)) return MediaType.IMAGE;
   if ([".mp4", ".webm", ".mov"].includes(ext)) return MediaType.VIDEO;
   if ([".mp3", ".ogg", ".wav", ".m4a"].includes(ext)) return MediaType.AUDIO;
@@ -28,6 +32,14 @@ function emitNewMessage(chatId: string, senderId: string, message: unknown) {
   }
 }
 
+=======
+  if ([".jpg",".jpeg",".png",".gif",".webp"].includes(ext)) return MediaType.IMAGE;
+  if ([".mp4",".webm",".mov"].includes(ext)) return MediaType.VIDEO;
+  if ([".mp3",".ogg",".wav",".m4a"].includes(ext)) return MediaType.AUDIO;
+  return MediaType.FILE;
+}
+
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
 export const chatController = {
   async getChats(req: AuthRequest, res: Response): Promise<void> {
     try {
@@ -42,6 +54,7 @@ export const chatController = {
   async createChat(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { participantId } = req.body;
+<<<<<<< HEAD
       if (!participantId) {
         res.status(400).json({ error: "participantId is required" });
         return;
@@ -63,6 +76,13 @@ export const chatController = {
     } catch (err: unknown) {
       const e = err as { code?: string };
       if (e.code === "FORBIDDEN") { res.status(403).json({ error: "Forbidden" }); return; }
+=======
+      if (!participantId) { res.status(400).json({ error: "participantId required" }); return; }
+      const chat = await chatService.getOrCreateDirectChat(req.user!.id, participantId);
+      res.status(201).json(chat);
+    } catch (err: any) {
+      if (err.code === "FORBIDDEN") { res.status(403).json({ error: err.message }); return; }
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
       console.error("[createChat]", err);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -74,9 +94,14 @@ export const chatController = {
       const { cursor } = req.query as { cursor?: string };
       const messages = await chatService.getMessages(chatId, req.user!.id, cursor);
       res.json(messages);
+<<<<<<< HEAD
     } catch (err: unknown) {
       const e = err as { code?: string };
       if (e.code === "FORBIDDEN") { res.status(403).json({ error: "Forbidden" }); return; }
+=======
+    } catch (err: any) {
+      if (err.code === "FORBIDDEN") { res.status(403).json({ error: err.message }); return; }
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
       console.error("[getMessages]", err);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -85,6 +110,7 @@ export const chatController = {
   async sendMessage(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { chatId } = req.params;
+<<<<<<< HEAD
       const { text, replyToId } = req.body as { text?: string; replyToId?: string };
       if (!text?.trim()) {
         res.status(400).json({ error: "text is required" });
@@ -99,6 +125,14 @@ export const chatController = {
     } catch (err: unknown) {
       const e = err as { code?: string };
       if (e.code === "FORBIDDEN") { res.status(403).json({ error: "Forbidden" }); return; }
+=======
+      const { text, replyToId } = req.body;
+      if (!text?.trim()) { res.status(400).json({ error: "text required" }); return; }
+      const message = await chatService.sendMessage(chatId, req.user!.id, text.trim(), replyToId);
+      res.status(201).json(message);
+    } catch (err: any) {
+      if (err.code === "FORBIDDEN") { res.status(403).json({ error: err.message }); return; }
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
       console.error("[sendMessage]", err);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -108,6 +142,7 @@ export const chatController = {
     try {
       const { chatId } = req.params;
       const file = req.file;
+<<<<<<< HEAD
       if (!file) {
         res.status(400).json({ error: "No file uploaded" });
         return;
@@ -133,6 +168,15 @@ export const chatController = {
     } catch (err: unknown) {
       const e = err as { code?: string };
       if (e.code === "FORBIDDEN") { res.status(403).json({ error: "Forbidden" }); return; }
+=======
+      if (!file) { res.status(400).json({ error: "No file uploaded" }); return; }
+      const mediaUrl = `/uploads/${file.filename}`;
+      const mediaType = getMediaType(file.filename);
+      const message = await chatService.sendMediaMessage(chatId, req.user!.id, mediaUrl, mediaType);
+      res.status(201).json(message);
+    } catch (err: any) {
+      if (err.code === "FORBIDDEN") { res.status(403).json({ error: err.message }); return; }
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
       console.error("[sendMedia]", err);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -152,10 +196,15 @@ export const chatController = {
     try {
       await chatService.deleteMessage(req.params.messageId, req.user!.id);
       res.json({ ok: true });
+<<<<<<< HEAD
     } catch (err: unknown) {
       const e = err as { code?: string };
       if (e.code === "FORBIDDEN") { res.status(403).json({ error: "Forbidden" }); return; }
       console.error("[deleteMessage]", err);
+=======
+    } catch (err: any) {
+      if (err.code === "FORBIDDEN") { res.status(403).json({ error: err.message }); return; }
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
       res.status(500).json({ error: "Internal server error" });
     }
   },

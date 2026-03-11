@@ -9,7 +9,15 @@ export interface User {
   bio: string;
   online: boolean;
   createdAt: string;
+<<<<<<< HEAD
   updatedAt: string;
+=======
+}
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
 }
 
 export interface AuthResponse {
@@ -25,9 +33,15 @@ export interface Message {
   text: string | null;
   mediaUrl: string | null;
   mediaType: "image" | "video" | "audio" | "file" | null;
+<<<<<<< HEAD
   status: "sending" | "sent" | "delivered" | "seen" | "failed";
   replyToId: string | null;
   replyTo?: Pick<Message, "id" | "text" | "senderId" | "createdAt"> | null;
+=======
+  status: "sending" | "sent" | "delivered" | "seen";
+  replyToId: string | null;
+  replyTo?: Message | null;
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   createdAt: string;
   updatedAt: string;
   sender?: User;
@@ -42,6 +56,15 @@ export interface Chat {
   updatedAt: string;
 }
 
+<<<<<<< HEAD
+=======
+export interface TypingEvent {
+  chatId: string;
+  userId: string;
+  isTyping: boolean;
+}
+
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
 export interface CallState {
   type: "voice" | "video";
   partner: User;
@@ -51,28 +74,49 @@ export interface CallState {
 export type Language = "en" | "zh" | "ar" | "ku" | "bn";
 
 export interface AppContextType {
+<<<<<<< HEAD
+=======
+  // Auth
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   currentUser: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, displayName: string) => Promise<boolean>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
 
+<<<<<<< HEAD
+=======
+  // Navigation
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   page: "landing" | "auth" | "app";
   setPage: (p: "landing" | "auth" | "app") => void;
   appSection: "chats" | "calls" | "profile" | "settings";
   setAppSection: (s: "chats" | "calls" | "profile" | "settings") => void;
 
+<<<<<<< HEAD
   chats: Chat[];
   activeChat: Chat | null;
   setActiveChat: (chat: Chat | null) => Promise<void>;
   messages: Record<string, Message[]>;
   sendMessage: (chatId: string, text: string, replyToId?: string) => Promise<void>;
+=======
+  // Chat
+  chats: Chat[];
+  activeChat: Chat | null;
+  setActiveChat: (chat: Chat | null) => void;
+  messages: Record<string, Message[]>;
+  sendMessage: (chatId: string, text: string, replyToId?: string) => void;
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   sendMedia: (chatId: string, file: File) => Promise<void>;
   startChat: (userId: string) => Promise<void>;
   markSeen: (chatId: string) => void;
   typingUsers: Record<string, string[]>;
   emitTyping: (chatId: string, isTyping: boolean) => void;
 
+<<<<<<< HEAD
+=======
+  // UI
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   lang: Language;
   setLang: (l: Language) => void;
   darkMode: boolean;
@@ -81,10 +125,21 @@ export interface AppContextType {
   theme: ThemeColors;
   isRTL: boolean;
 
+<<<<<<< HEAD
   callState: CallState | null;
   setCallState: (s: CallState | null) => void;
 
   searchById: (appId: string) => Promise<User | null>;
+=======
+  // Call
+  callState: CallState | null;
+  setCallState: (s: CallState | null) => void;
+
+  // Search
+  searchById: (appId: string) => Promise<User | null>;
+
+  // Misc
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   copiedId: boolean;
   copyAppId: () => void;
   mobileSidebarOpen: boolean;

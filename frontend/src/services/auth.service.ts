@@ -1,4 +1,5 @@
 // © Danial Mohmad — All Rights Reserved
+<<<<<<< HEAD
 import supabase from "../lib/supabase";
 import { mapProfile } from "../lib/mappers";
 import type { AuthResponse, User } from "../types";
@@ -102,5 +103,33 @@ export const authService = {
 
     if (error || !data) throw new Error("Profile not found");
     return mapProfile(data);
+=======
+import api from "./api";
+import type { AuthResponse, User } from "../types";
+
+export const authService = {
+  async login(email: string, password: string): Promise<AuthResponse> {
+    const { data } = await api.post<AuthResponse>("/auth/login", { email, password });
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    return data;
+  },
+
+  async register(email: string, password: string, displayName: string): Promise<AuthResponse> {
+    const { data } = await api.post<AuthResponse>("/auth/register", { email, password, displayName });
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    return data;
+  },
+
+  async me(): Promise<User> {
+    const { data } = await api.get<User>("/auth/me");
+    return data;
+  },
+
+  logout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+>>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   },
 };
