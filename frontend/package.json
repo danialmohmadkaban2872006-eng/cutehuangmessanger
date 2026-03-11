@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
   "name": "cute-huang-messenger",
   "version": "1.0.0",
   "description": "Cute Huang Messenger — © Danial Mohmad",
-=======
-  "name": "cute-huang-messenger-frontend",
-  "version": "1.0.0",
-  "description": "Cute Huang Messenger — Frontend. © Danial Mohmad",
->>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -16,19 +10,10 @@
     "lint": "eslint src --ext ts,tsx"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@supabase/supabase-js": "^2.44.4",
     "date-fns": "^3.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-=======
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.0",
-    "socket.io-client": "^4.7.5",
-    "axios": "^1.7.2",
-    "date-fns": "^3.6.0",
->>>>>>> d2bbc2438c1412cd08031520573891ee09832ada
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
