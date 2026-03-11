@@ -1,0 +1,111 @@
+// © Danial Mohmad — All Rights Reserved
+// Cute Huang Messenger — Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  appId       String   @unique          // e.g. "HU-482931"
+  email       String   @unique
+  password    String
+  displayName String
+  avatar      String?
+  bio         String   @default("")
+  online      Boolean  @default(false)
+  lastSeen    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  sentMessages      Message[]           @relation("SentMessages")
+  chatParticipants  ChatParticipant[]
+  refreshTokens     RefreshToken[]
+
+  @@index([appId])
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Chat {
+  id           String            @id @default(uuid())
+  type         ChatType          @default(DIRECT)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  participants ChatParticipant[]
+  messages     Message[]
+
+  @@index([updatedAt])
+}
+
+model ChatParticipant {
+  id           String   @id @default(uuid())
+  chatId       String
+  userId       String
+  unreadCount  Int      @default(0)
+  lastReadAt   DateTime @default(now())
+  joinedAt     DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id          String        @id @default(uuid())
+  chatId      String
+  senderId    String
+  text        String?
+  mediaUrl    String?
+  mediaType   MediaType?
+  status      MessageStatus @default(SENT)
+  replyToId   String?
+  deletedAt   DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  chat     Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender   User     @relation("SentMessages", fields: [senderId], references: [id])
+  replyTo  Message? @relation("ReplyTo", fields: [replyToId], references: [id])
+  replies  Message[] @relation("ReplyTo")
+
+  @@index([chatId, createdAt])
+  @@index([senderId])
+}
+
+enum ChatType {
+  DIRECT
+  GROUP
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  SEEN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+}
